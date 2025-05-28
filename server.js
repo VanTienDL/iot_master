@@ -14,23 +14,39 @@ const __dirname = path.dirname(__filename);
 const publicPath = path.join(__dirname, 'public');
 app.use(express.static(publicPath));
 
-// Khi có client kết nối
+// Giữ danh sách các client kết nối, bao gồm cả local server
+let localClients = [];
+
 io.on('connection', (socket) => {
   console.log('🔌 Client đã kết nối:', socket.id);
 
-  // Nhận yêu cầu từ client
+  // Nếu là local server kết nối lên master (dựa trên một tín hiệu riêng)
+  socket.on('register-local', () => {
+    localClients.push(socket);
+    console.log('✅ Đã đăng ký local server:', socket.id);
+  });
+
   socket.on('stop-buzzer', () => {
     console.log('🛑 Yêu cầu tắt còi');
-    // Gửi tới các thiết bị nếu có (hoặc log)
+
+    // Gửi lệnh ngược lại cho local server
+    localClients.forEach((client) => client.emit('stop-buzzer'));
   });
 
   socket.on('toggle-water', () => {
     console.log('💧 Yêu cầu bật/tắt tưới');
-    // Gửi tín hiệu điều khiển đến thiết bị thực (nếu có)
+
+    // Gửi lệnh ngược lại cho local server
+    localClients.forEach((client) => client.emit('toggle-water'));
   });
 
-  
+  // Xóa client nếu ngắt kết nối
+  socket.on('disconnect', () => {
+    localClients = localClients.filter((client) => client.id !== socket.id);
+    console.log('❌ Client đã ngắt kết nối:', socket.id);
+  });
 });
+
 
 // Khởi động server
 const PORT = process.env.PORT || 3000;
