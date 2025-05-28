@@ -29,16 +29,7 @@ io.on('connection', (socket) => {
     // Gửi tín hiệu điều khiển đến thiết bị thực (nếu có)
   });
 
-  // Giả lập gửi dữ liệu cảm biến mỗi vài giây (nếu chưa có thiết bị thật)
-  setInterval(() => {
-    socket.emit('dht', { temp: (20 + Math.random() * 10).toFixed(1), humi: (50 + Math.random() * 20).toFixed(1) });
-    socket.emit('soil', Math.random() > 0.5 ? 'Khô' : 'Ẩm');
-    socket.emit('fire', Math.random() < 0.1); // 10% báo cháy
-    socket.emit('watering', Math.random() > 0.5); // ngẫu nhiên bật/tắt tưới
-    socket.emit('key', Math.ceil(Math.random() * 8).toString()); // mô phỏng bấm phím
-  }, 3000);
-});
-
+  
 // Khởi động server
 const PORT = process.env.PORT || 3000;
 server.listen(PORT, () => {
