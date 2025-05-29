@@ -184,6 +184,7 @@
   <script src="/socket.io/socket.io.js"></script>
   <script>
     const socket = io();
+    socket.emit('register-ui'); // <- Thêm dòng này để đăng ký là UI
     let pumpOn = false, lightOn = false, buzzerOn = false;
 
     socket.on('dht', data => {
