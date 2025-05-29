@@ -35,12 +35,19 @@ io.on('connection', (socket) => {
 
   // === NHẬN DỮ LIỆU TỪ LOCAL SERVER VÀ GỬI CHO UI CLIENT ===
   socket.on('sensor-data', (data) => {
-    console.log('📡 Nhận dữ liệu từ local server:', data);
-
-    uiClients.forEach((client) => {
-      client.emit('sensor-data', data);
-    });
+  console.log('📡 Nhận dữ liệu từ local server:', data);
+  
+  uiClients.forEach(client => {
+    if(data.temp && data.humi) client.emit('dht', { temp: data.temp, humi: data.humi });
+    if(data.soil !== undefined) client.emit('soil', data.soil);
+    if(data.fire !== undefined) client.emit('fire', data.fire);
+    if(data.watering !== undefined) client.emit('watering', data.watering);
+    if(data.light !== undefined) client.emit('light', data.light);
+    if(data.buzzer !== undefined) client.emit('buzzer', data.buzzer);
+    if(data.key) client.emit('key', { key: data.key });
   });
+});
+
 
   // === XỬ LÝ LỆNH TỪ UI GỬI TỚI LOCAL SERVER ===
 
