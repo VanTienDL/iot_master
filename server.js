@@ -73,7 +73,7 @@ io.on('connection', (socket) => {
     console.log('🔑 Key:', data);
     uiClients.forEach(client => client.emit('key', data));
   });
-});
+
 
 
 
@@ -139,7 +139,7 @@ io.on('connection', (socket) => {
     uiClients = uiClients.filter((client) => client.id !== socket.id);
     console.log('❌ Client đã ngắt kết nối:', socket.id);
   });
-
+});
 // Khởi động server
 const PORT = process.env.PORT || 3000;
 server.listen(PORT, () => {
