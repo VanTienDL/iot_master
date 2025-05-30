@@ -139,7 +139,6 @@ io.on('connection', (socket) => {
     uiClients = uiClients.filter((client) => client.id !== socket.id);
     console.log('❌ Client đã ngắt kết nối:', socket.id);
   });
-});
 
 // Khởi động server
 const PORT = process.env.PORT || 3000;
