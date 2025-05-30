@@ -34,19 +34,47 @@ io.on('connection', (socket) => {
   });
 
   // === NHẬN DỮ LIỆU TỪ LOCAL SERVER VÀ GỬI CHO UI CLIENT ===
-  socket.on('sensor-data', (data) => {
-  console.log('📡 Nhận dữ liệu từ local server:', data);
-  
-  uiClients.forEach(client => {
-    if(data.temp && data.humi) client.emit('dht', { temp: data.temp, humi: data.humi });
-    if(data.soil !== undefined) client.emit('soil', data.soil);
-    if(data.fire !== undefined) client.emit('fire', data.fire);
-    if(data.watering !== undefined) client.emit('watering', data.watering);
-    if(data.light !== undefined) client.emit('light', data.light);
-    if(data.buzzer !== undefined) client.emit('buzzer', data.buzzer);
-    if(data.key) client.emit('key', { key: data.key });
+  socket.on('dht', (data) => {
+    console.log('🌡️ DHT:', data);
+    uiClients.forEach(client => client.emit('dht', data));
+  });
+
+  socket.on('soil', (value) => {
+    console.log('🌱 Soil:', value);
+    uiClients.forEach(client => client.emit('soil', value));
+  });
+
+  socket.on('lux', (value) => {
+    console.log('💡 Lux:', value);
+    uiClients.forEach(client => client.emit('lux', value));
+  });
+
+  socket.on('fire', (value) => {
+    console.log('🔥 Fire:', value);
+    uiClients.forEach(client => client.emit('fire', value));
+  });
+
+  socket.on('watering', (value) => {
+    console.log('💧 Watering:', value);
+    uiClients.forEach(client => client.emit('watering', value));
+  });
+
+  socket.on('light', (value) => {
+    console.log('💡 Light:', value);
+    uiClients.forEach(client => client.emit('light', value));
+  });
+
+  socket.on('buzzer', (value) => {
+    console.log('🔊 Buzzer:', value);
+    uiClients.forEach(client => client.emit('buzzer', value));
+  });
+
+  socket.on('key', (data) => {
+    console.log('🔑 Key:', data);
+    uiClients.forEach(client => client.emit('key', data));
   });
 });
+
 
 
   // === XỬ LÝ LỆNH TỪ UI GỬI TỚI LOCAL SERVER ===
