@@ -59,6 +59,11 @@ io.on('connection', (socket) => {
     uiClients.forEach(client => client.emit('watering', value));
   });
 
+  socket.on('mode', (value) => {
+    console.log('💧 Pump mode:', value);
+    uiClients.forEach(client => client.emit('mode', value));
+  });
+
   socket.on('light', (value) => {
     console.log('💡 Light:', value);
     uiClients.forEach(client => client.emit('light', value));
@@ -125,6 +130,16 @@ io.on('connection', (socket) => {
   socket.on('auto-pump', () => {
     console.log('💧 Bơm tự động');
     localClients.forEach((client) => client.emit('auto-pump'));
+  });
+  //Mode
+  socket.on('start-mode', () => {
+    console.log('💧 Bơm nhỏ giọt');
+    localClients.forEach((client) => client.emit('start-mode'));
+  });
+
+  socket.on('stop-mode', () => {
+    console.log('💧 Bơm thường');
+    localClients.forEach((client) => client.emit('stop-mode'));
   });
 
   // Auto toàn hệ thống

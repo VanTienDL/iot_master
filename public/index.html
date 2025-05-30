@@ -157,6 +157,7 @@
     <p><strong>Độ ẩm đất:</strong> <span id="soil">--</span></p>
     <p><strong>Tình trạng cháy:</strong> <span id="fire">Không</span></p>
     <p><strong>Trạng thái tưới:</strong> <span id="watering">Đang tắt</span></p>
+    <p><strong>Chế độ bơm:</strong> <span id="mode">Bơm thường</span></p>
     <p><strong>Đèn:</strong> <span id="light">--</span></p>
     <p><strong>Còi:</strong> <span id="buzzer">--</span></p>
   </div>
@@ -175,6 +176,7 @@
       <button onclick="autoBuzzer()">Tự động Còi</button>
     </div>
     <div class="control-group">
+      <button id="mode-toggle">Bơm Nhỏ Giọt</button>
       <button onclick="autoAll()">Tự động toàn hệ thống</button>
     </div>
   </div>
@@ -195,7 +197,7 @@
   <script>
     const socket = io();
     socket.emit('register-ui'); // <- Thêm dòng này để đăng ký là UI
-    let pumpOn = false, lightOn = false, buzzerOn = false;
+    let pumpOn = false, lightOn = false, buzzerOn = false, modeOn = false;
 
     socket.on('dht', data => {
       document.getElementById('temp').textContent = data.temp;
@@ -229,9 +231,18 @@
       btn.classList.toggle('active', status);
     });
 
+    socket.on('mode', status => {
+      modeOn = status;
+      document.getElementById('mode').textContent = status ? 'Bơm nhỏ giọt' : 'Bơm thường';
+      const btn = document.getElementById('mode-toggle');
+      btn.textContent = status ? 'Bơm Thường' : 'Bơm Nhỏ Giọt';
+      btn.classList.toggle('active', status);
+    });
+
     document.getElementById('pump-toggle').onclick = () => socket.emit(pumpOn ? 'stop-pump' : 'start-pump');
     document.getElementById('light-toggle').onclick = () => socket.emit(lightOn ? 'stop-light' : 'start-light');
     document.getElementById('buzzer-toggle').onclick = () => socket.emit(buzzerOn ? 'stop-buzzer' : 'start-buzzer');
+    document.getElementById('mode-toggle').onclick = () => socket.emit(modeOn ? 'stop-mode' : 'start-mode');
 
     function autoPump() { socket.emit('auto-pump'); }
     function autoLight() { socket.emit('auto-light'); }
